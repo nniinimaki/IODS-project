@@ -1,13 +1,48 @@
-# Insert chapter 2 title here
+# Regression analysis
 
-*Describe the work you have done this week and summarize your learning.*
-
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using.
-
+**
 ```{r}
 date()
 ```
 
-Here we go again...
+
+First, I read the data into R from my local folder and explore the structure and the dimensions of the data. The data has 166 observations of seven variables: gender (M = ale, F=female), age (Agen in years), attitude (global attitude towards statistics), deep (sum variable deep approach), stra (sum variable strategic approach), surf (sum variable surface approach), and points (exam points).
+
+```{r}
+
+students2014 <- read.table("data/learning2014.csv", sep=",", header=TRUE)
+
+dim(students2014)
+
+str(students2014)
+
+
+```
+Here is a graphical overview and summaries of the variables in the data. None of the variables are normally distributed, which can be slightly problematic, since in regression analysis the data is assumed to be normally distributed.An important assumption is also that the residuals are normally distributed and homoscedastic. This will be considered later in the analysis.  
+Students' attitude towards statistics and their exam points have a high positive correlation. Sum variables surface approach and deep approach has a negative correlations as does the surface and strategic approaches.
+```{r}
+
+library(GGally)
+library(ggplot2)
+
+p <- ggpairs(students2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
+p
+
+
+```
+
+
+```{r}
+
+p1 <- ggplot(students2014, aes(x = attitude, y = points))
+
+# define the visualization type (points)
+p2 <- p1 + geom_point() + geom_smooth(method = "lm") + ggtitle("Student's attitude versus exam points")
+
+# draw the plot
+p2
+
+
+```
+I only made it this far within the deadline due to another important deadline and unfotunate illness. I will finnish the assignment later, but that will be after the Tue 9 a.m. deadline.
