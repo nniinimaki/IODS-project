@@ -117,7 +117,7 @@ lrn14$Attitude / 10
 
 # create column 'attitude' by scaling the column "Attitude"
 lrn14$attitude <- lrn14$Attitude / 10
-view(lrn14)
+
 
 ```
 
