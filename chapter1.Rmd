@@ -1,24 +1,13 @@
 
 # About the project
 
-*Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you should use R Markdown syntax.*
-
 I'm totally newbie with R, so I expect a steep learning curve from this course. Unfortunately I'm also very busy during first two weeks of the course with other dead lines, so I hope I don't fall off the wagon right away because I don't have as much time available for coursework as I would like. I have been wanting to learn R for a while now, so I was delighted when I found this course from SISU. I'm using a couple of R based webtools for coding and analyzing my data for my PhD and even though I don't need to know R to use those tools I believe that learning R will be helpful for me, at least in my future research if not with this ongoing paper.\
 Here are links for the webtools I'm using:\
-<<<<<<< HEAD
 - [nCoder](https://www.n-coder.org/)\
 - [ENA webtool](https://www.epistemicnetwork.org/)\
 
 I haven't gotten very far with the **R for Health Data Science** book and the **Exercise Set 1** yet, but so far everything has been interesting and I've liked the way you can run the code at the same time while reading the book. For some reason the R studio on my computer is working really slow though, and *that sure can be a bit annoying at times*. Also, I got some weird error messages when I tried to run some of the code chunks in Exercise 1. Maybe I haven't got everything properly installed or up to date? I have to look into it.
-
-=======
--[nCoder](https://www.n-coder.org/)\
--[ENA webtool](https://www.epistemicnetwork.org/)\
-
-I haven't gotten very far with the R for Health Data Science book and the Exercise Set 1 yet, but so far everything has been interesting and I've liked the way you can run the code at the same time while reading the book. For some reason the R studio on my computer is working really slow though, and *that sure can be a bit annoying at times*. Maybe I haven't got everything properly installed. I have to look into it.
-
-**NB!** Problem solved! R Mardown needed to be updated. Now it seems to be working just fine.
->>>>>>> 7a8f9507f17be7902a23e693eb8718ff7869d871
+NB! Problem solved. I had an old version of R on my computer and everything started to work after I updated that.
 
 ### My Github repository: https://github.com/nniinimaki/IODS-project.git
 
@@ -29,5 +18,5 @@ I haven't gotten very far with the R for Health Data Science book and the Exerci
 date()
 
 ```
-The text continues here.
+
 
