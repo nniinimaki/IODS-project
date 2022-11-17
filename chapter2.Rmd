@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Regression analysis and model validation
 
 ```{r}
