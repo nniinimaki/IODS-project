@@ -1,0 +1,65 @@
+<<<<<<< HEAD
+---
+title: "IODS course project"
+author: "Niina Niinimäki"
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    fig_width: 6
+    fig_height: 4
+---
+
+***
+
+# Introduction to Open Data Science - Course Project
+
+```{r child = "chapter1.Rmd"}
+# This will include Chapter 1 (that is updated in its own file) in the document.
+```
+  
+***
+  
+```{r child = "chapter2.Rmd"}
+# This will include Chapter 2 (that is updated in its own file) in the document.
+```
+
+***
+
+(more chapters to be added similarly as we proceed with the course!)
+
+=======
+---
+title: "IODS course project"
+author: "Niina Niinimäki"
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    fig_width: 6
+    fig_height: 4
+---
+
+***
+
+# Introduction to Open Data Science - Course Project
+
+```{r child = "chapter1.Rmd"}
+# This will include Chapter 1 (that is updated in its own file) in the document.
+```
+  
+***
+  
+```{r child = "chapter2.Rmd"}
+# This will include Chapter 2 (that is updated in its own file) in the document.
+```
+
+***
+
+(more chapters to be added similarly as we proceed with the course!)
+
+>>>>>>> 7a8f9507f17be7902a23e693eb8718ff7869d871

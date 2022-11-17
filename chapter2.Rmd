@@ -1,0 +1,234 @@
+<<<<<<< HEAD
+# Regression analysis and model validation
+
+```{r}
+date()
+```
+*Here we go again*
+
+First, I read the data into R from my local folder and explore the structure and the dimensions of the data. The data has 166 observations of seven variables:  
+*gender (M = ale, F=female)
+*age (age in years)
+*attitude (global attitude towards statistics)
+*deep (sum variable deep approach)
+*stra (sum variable strategic approach)
+*surf (sum variable surface approach)
+*points (exam points).
+
+```{r}
+
+students2014 <- read.table("data/learning2014.csv", sep=",", header=TRUE)
+
+dim(students2014)
+
+str(students2014)
+
+
+```
+## Prerequisites for regression analysis
+Here is a quick graphical overview and summaries of the variables in the data. Prerequisite for regression analysis is that the data is normally distributed, and more importantly, that the residuals (the part that is *not* explained by the model) are normally distributed and homoscedastic. None of the variables seems to be exactly normally distributed, but I think we can get away with that. The distribution on homoscedasticity of the residuals will be considered later in the model validation.  
+Another prerequisite for regression analysis is that the explanatory variables (*independent variables*) correlate with the target variable (*dependent variable*), but not too much with each other. The target variable here is the exam points. Students' attitude towards statistics and their exam points have a high positive and statistically relevant correlation (r=0,437). Strategic approach also correlates positively (r=0,146) and surface approach negatively (r=-0,144) with exam points.  
+```{r}
+
+library(GGally)
+library(ggplot2)
+
+p <- ggpairs(students2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
+p
+
+
+```
+
+Here is a graph of the students attitude towards statitics versus their exam points, that show the strong correlation (linear relationship) between these two varibles.  
+
+```{r}
+
+p1 <- ggplot(students2014, aes(x = attitude, y = points))
+
+# define the visualization type (points)
+p2 <- p1 + geom_point() + geom_smooth(method = "lm") + ggtitle("Student's attitude versus exam points")
+
+# draw the plot
+p2
+
+
+```
+
+  
+Let's also draw a similar graph for the strategic and surface approach vs. exam points.
+
+```{r}
+
+p1 <- ggplot(students2014, aes(x = stra, y = points))
+
+# define the visualization type (points)
+p2 <- p1 + geom_point() + geom_smooth(method = "lm") + ggtitle("Strategic approach versus exam points")
+
+# draw the plot
+p2
+
+p3 <- ggplot(students2014, aes(x = surf, y = points))
+
+# define the visualization type (points)
+p4 <- p3 + geom_point() + geom_smooth(method = "lm") + ggtitle("Surface approach versus exam points")
+
+# draw the plot
+p4
+
+```
+
+## Regression model
+For my regression model I pick the exam points as the target variable and attitude, strategic approach, and surface approach as explanatory variables.  
+
+```{r}
+
+library(GGally)
+library(ggplot2)
+# create an plot matrix with ggpairs()
+ggpairs(students2014, lower = list(combo = wrap("facethist", bins = 20)))
+
+# create a regression model with multiple explanatory variables
+my_model <- lm(points ~ attitude + stra + surf, data = students2014)
+
+# print out a summary of the model
+summary(my_model)
+
+```
+
+My model is: points = 11,0171 + 3,3952 x attitude + 0,8531 x stra - 0,5861 x surf  
+The model explains the test scores statistically significantly: F (3, 162) = 14,13, p=3,156e-08  
+Multiple R-squared = 0,2074 so the three variables explains about 20 % of the exam points. However, Of the explanatory variables, only attitude has t-value greater than 2 (or less than -2), so that is actually the only variable in this model that is a good predictor of exam points.
+
+## Model validation
+The model is validated graphically:  
+*Plot 1: Residuals vs fitted*  
+This plot tells us if the residuals are homoscedastic. As the points in this scatter plot are distributed evenly, we can say that the residuals are homoscedastic.  
+
+*Plot 2: Normal Q-Q*  
+This plot tells us wether the residuals are normally distributed. Since the dots on this graph form an approximately straight line going from corner to corner, we can conclude that the residuals are normally distributed.  
+
+*Plot 3: Residuals vs Leverage*  
+This plot allows us to identify influential observations (or *outliers?*) in a regression model. Leverage refers to the extent to which the coefficients in the regression model would change if a particular observation was removed from the dataset. Observations with high leverage have a strong influence on the coefficients in the regression model. If we remove these observations, the coefficients of the model would change noticeably. If any point in this plot falls outside of Cook’s distance (the grey dashed lines) then it is considered to be an influential observation. There are no influental observations in this set.  
+```{r}
+
+# draw diagnostic plots using the plot() function. Plots 1 =  Residuals vs Fitted values, plot 2 = Normal QQ-plot and plot 5 = Residuals vs Leverage
+plot(my_model, which = c(1,2,5))
+=======
+# Regression analysis and model validation
+
+```{r}
+date()
+```
+*Here we go again*
+
+First, I read the data into R from my local folder and explore the structure and the dimensions of the data. The data has 166 observations of seven variables:  
+*gender (M = ale, F=female)
+*age (age in years)
+*attitude (global attitude towards statistics)
+*deep (sum variable deep approach)
+*stra (sum variable strategic approach)
+*surf (sum variable surface approach)
+*points (exam points).
+
+```{r}
+
+students2014 <- read.table("data/learning2014.csv", sep=",", header=TRUE)
+
+dim(students2014)
+
+str(students2014)
+
+
+```
+## Prerequisites for regression analysis
+Here is a quick graphical overview and summaries of the variables in the data. Prerequisite for regression analysis is that the data is normally distributed, and more importantly, that the residuals (the part that is *not* explained by the model) are normally distributed and homoscedastic. None of the variables seems to be exactly normally distributed, but I think we can get away with that. The distribution on homoscedasticity of the residuals will be considered later in the model validation.  
+Another prerequisite for regression analysis is that the explanatory variables (*independent variables*) correlate with the target variable (*dependent variable*), but not too much with each other. The target variable here is the exam points. Students' attitude towards statistics and their exam points have a high positive and statistically relevant correlation (r=0,437). Strategic approach also correlates positively (r=0,146) and surface approach negatively (r=-0,144) with exam points.  
+```{r}
+
+library(GGally)
+library(ggplot2)
+
+p <- ggpairs(students2014, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+
+p
+
+
+```
+
+Here is a graph of the students attitude towards statitics versus their exam points, that show the strong correlation (linear relationship) between these two varibles.  
+
+```{r}
+
+p1 <- ggplot(students2014, aes(x = attitude, y = points))
+
+# define the visualization type (points)
+p2 <- p1 + geom_point() + geom_smooth(method = "lm") + ggtitle("Student's attitude versus exam points")
+
+# draw the plot
+p2
+
+
+```
+
+  
+Let's also draw a similar graph for the strategic and surface approach vs. exam points.
+
+```{r}
+
+p1 <- ggplot(students2014, aes(x = stra, y = points))
+
+# define the visualization type (points)
+p2 <- p1 + geom_point() + geom_smooth(method = "lm") + ggtitle("Strategic approach versus exam points")
+
+# draw the plot
+p2
+
+p3 <- ggplot(students2014, aes(x = surf, y = points))
+
+# define the visualization type (points)
+p4 <- p3 + geom_point() + geom_smooth(method = "lm") + ggtitle("Surface approach versus exam points")
+
+# draw the plot
+p4
+
+```
+
+## Regression model
+For my regression model I pick the exam points as the target variable and attitude, strategic approach, and surface approach as explanatory variables.  
+
+```{r}
+
+library(GGally)
+library(ggplot2)
+# create an plot matrix with ggpairs()
+ggpairs(students2014, lower = list(combo = wrap("facethist", bins = 20)))
+
+# create a regression model with multiple explanatory variables
+my_model <- lm(points ~ attitude + stra + surf, data = students2014)
+
+# print out a summary of the model
+summary(my_model)
+
+```
+
+My model is: points = 11,0171 + 3,3952 x attitude + 0,8531 x stra - 0,5861 x surf  
+The model explains the test scores statistically significantly: F (3, 162) = 14,13, p=3,156e-08  
+Multiple R-squared = 0,2074 so the three variables explains about 20 % of the exam points. However, Of the explanatory variables, only attitude has t-value greater than 2 (or less than -2), so that is actually the only variable in this model that is a good predictor of exam points.
+
+## Model validation
+The model is validated graphically:  
+*Plot 1: Residuals vs fitted*  
+This plot tells us if the residuals are homoscedastic. As the points in this scatter plot are distributed evenly, we can say that the residuals are homoscedastic.  
+
+*Plot 2: Normal Q-Q*  
+This plot tells us wether the residuals are normally distributed. Since the dots on this graph form an approximately straight line going from corner to corner, we can conclude that the residuals are normally distributed.  
+
+*Plot 3: Residuals vs Leverage*  
+This plot allows us to identify influential observations (or *outliers?*) in a regression model. Leverage refers to the extent to which the coefficients in the regression model would change if a particular observation was removed from the dataset. Observations with high leverage have a strong influence on the coefficients in the regression model. If we remove these observations, the coefficients of the model would change noticeably. If any point in this plot falls outside of Cook’s distance (the grey dashed lines) then it is considered to be an influential observation. There are no influental observations in this set.  
+```{r}
+
+# draw diagnostic plots using the plot() function. Plots 1 =  Residuals vs Fitted values, plot 2 = Normal QQ-plot and plot 5 = Residuals vs Leverage
+plot(my_model, which = c(1,2,5))
+>>>>>>> 7a8f9507f17be7902a23e693eb8718ff7869d871
+```
