@@ -355,7 +355,7 @@ display: none;
 <div id="logistic-regression" class="section level1">
 <h1>Logistic regression</h1>
 <pre class="r"><code>date()</code></pre>
-<pre><code>## [1] &quot;Mon Nov 21 23:44:51 2022&quot;</code></pre>
+<pre><code>## [1] &quot;Tue Nov 22 00:04:41 2022&quot;</code></pre>
 <p>In this report I examine the relationship between student alcohol
 consumption and student achievement in secondary education of two
 Portuguese schools. For the use of this report I combined two datasets
@@ -670,9 +670,9 @@ has 2,7 times higher odds to belong to the high alcohol consumption
 group. Having one more failure in the pas increases the odds of
 belonging to the high alcohol consumption group by 1,8, and having one
 more absences increases the odds by 1,1.</p>
-<p><strong>Binary preidictions</strong> Let’s check how well the model
-manages to predict whether the students’ belong to the high alcohol
-consumption group or not.</p>
+<p><strong>Binary preidictions</strong><br />
+Let’s check how well the model manages to predict whether the students’
+belong to the high alcohol consumption group or not.</p>
 <pre class="r"><code># fit the model
 m &lt;- glm(high_use ~ failures + absences + sex, data = alc, family = &quot;binomial&quot;)
 

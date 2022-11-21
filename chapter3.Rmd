@@ -148,7 +148,7 @@ cbind(OR, CI)
 ``` 
 Having past failures, having absences and being male increases the odds for the student to belong in the high alcohol consumption group. Students' gender is the biggest predictor; if the student is male, he has 2,7 times higher odds to belong to the high alcohol consumption group. Having one more failure in the pas increases the odds of belonging to the high alcohol consumption group by 1,8, and having one more absences increases the odds by 1,1.  
 
-**Binary preidictions**
+**Binary preidictions**  
 Let's check how well the model manages to predict whether the students' belong to the high alcohol consumption group or not.
 
 ```{r}
