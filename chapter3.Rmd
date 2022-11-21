@@ -58,8 +58,136 @@ alc %>% group_by(sex, high_use) %>% summarise(count = n(), mean_grade=mean(G3), 
 
 ```
 
-The table verifies that the average number of absences and average number of past failures is greater in high alcohol consumption groups for both genders. However, the mean grade in female high alcohol consumption group is actually slightly higher than in female low alcohol consumption group. With male students the original hypothesis is valid, tough: high alcohol consumption group has clearly lower mean grade than low alcohol consumption group.  
+The table verifies that the average number of absences and average number of past failures is greater in high alcohol consumption groups for both genders. In male students' high alcohol consumption group the mean grade is clearly lower in than low alcohol consumption group. However, in female students' high alcohol consumption group the mean grade is actually slightly higher than in low alcohol consumption group.  
+
+**Logistic regression model**  
+Let's explore statistically using logistic regression the relationship between gender, grade, absences, and failures, and the binary high/low alcohol consumption variable as the target variable. I'm going to add the variables to the modle one by one, starting with failures.
 
 
+```{r}
+
+# find the model with glm()
+m <- glm(high_use ~ failures, data = alc, family = "binomial")
+
+# print out a summary of the model
+summary(m)
+
+# print out the coefficients of the model
+coef(m)
 
 
+``` 
+The past failures are significantly associated with the probability of student belonging to the high alcohol consumption group (p = 0,000615). AIC of the model is 443,75. Let's add absencess to the model.
+
+```{r}
+
+# find the model with glm()
+m <- glm(high_use ~ failures + absences, data = alc, family = "binomial")
+
+# print out a summary of the model
+summary(m)
+
+# print out the coefficients of the model
+coef(m)
+
+
+```
+Both failures and absences are statistically significant. The AIC value is smaller than in the first model, which means that this model is better than the first one. Let's add gender as a third independent variable.
+
+```{r}
+
+# find the model with glm()
+m <- glm(high_use ~ failures + absences + sex, data = alc, family = "binomial")
+
+# print out a summary of the model
+summary(m)
+
+# print out the coefficients of the model
+coef(m)
+
+
+```
+All three independent variables are statistically significantly associated with the probability of student belonging to the high alcohol consumption group. The AIC value again smaller, so this model is again better at predicting if student belongs to the high alcohol consumption group than the two earlier models. Let's add the fourth variable, final grade, to the model. 
+
+
+```{r}
+
+# find the model with glm()
+m <- glm(high_use ~ failures + absences + sex + G3, data = alc, family = "binomial")
+
+# print out a summary of the model
+summary(m)
+
+# print out the coefficients of the model
+coef(m)
+
+
+``` 
+Now the past failures, absences, and gender are significantly associated with the probability of student belonging to the high alcohol consumption group but the final grade, however, is not (p=0,24). The AIC value is also a little bit higher in this last model, which indicates that the final grade might not be a good predictor of students' high alcohol consumption. So let's remove that from the model and computate the odds ratios and confidence intervals for the model that includes failures, absences and gender.
+
+```{r}
+
+# find the model with glm()
+m <- glm(high_use ~ failures + absences + sex, data = alc, family = "binomial")
+
+# print out a summary of the model
+summary(m)
+
+# print out the coefficients of the model
+coef(m)
+
+# compute odds ratios (OR)
+OR <- coef(m) %>% exp
+
+# compute confidence intervals (CI)
+CI <-confint(m) %>% exp
+
+# print out the odds ratios with their confidence intervals
+cbind(OR, CI)
+
+``` 
+Having past failures, having absences and being male increases the odds for the student to belong in the high alcohol consumption group. Students' gender is the biggest predictor; if the student is male, he has 2,7 times higher odds to belong to the high alcohol consumption group. Having one more failure in the pas increases the odds of belonging to the high alcohol consumption group by 1,8, and having one more absences increases the odds by 1,1.  
+
+**Binary preidictions**
+Let's check how well the model manages to predict whether the students' belong to the high alcohol consumption group or not.
+
+```{r}
+
+# fit the model
+m <- glm(high_use ~ failures + absences + sex, data = alc, family = "binomial")
+
+# predict() the probability of high_use
+probabilities <- predict(m, type = "response")
+
+library(dplyr)
+# add the predicted probabilities to 'alc'
+alc <- mutate(alc, probability = probabilities)
+
+# use the probabilities to make a prediction of high_use
+alc <- mutate(alc, prediction = probability > 0.5)
+
+# see the last ten original classes, predicted probabilities, and class predictions
+select(alc, failures, absences, sex, high_use, probability, prediction) %>% tail(10)
+
+# tabulate the target variable versus the predictions
+table(high_use = alc$high_use, prediction = alc$prediction)
+
+
+```
+This 2x2 table presents the number of students actually belonging to high alcohol consumption and low alcohol consumption groups and the number of students that are predicted to belong in said groups. The model manages to predict the low alcohol consumption group rather well. Only seven students are predicted to belong in the high use group when they actually do not, and 252 students' group is predicted right. However, the prediction of high alcohol consumption group is not as good. 78 students are predicted not to belong in high use group when in fact they do, and only 33 students are predicted to belong in the high use group correctly. If we check the last 10 observations in the data, we see that the last two student (no 369 and 370) belong in the high use group but are predicted not to. The model will need a little more work to get the predictions right for these (and the other 76) observations.
+
+```{r}
+
+# initialize a plot of 'high_use' versus 'probability' in 'alc'
+g <- ggplot(alc, aes(x = probability, y = high_use,col = prediction))
+
+# define the geom as points and draw the plot
+g + geom_point()
+
+# propabilistic table ofte the target variable versus the predictions
+
+table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table() %>% addmargins()
+
+
+```
+The point plot visualizes the actual and predicted values. From the probabilistic table we can see that the model predicted 21% of students not belonging to the high use group when they in fact do and little less than 2% belonging to the high use group when they in fact don't. The training error of the model is then approximately 0,23.
