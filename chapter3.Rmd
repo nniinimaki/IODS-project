@@ -1,0 +1,65 @@
+# Logistic regression
+
+```{r}
+date()
+```
+In this report I examine the relationship between student alcohol consumption and student achievement in secondary education of two Portuguese schools. For the use of this report I combined two datasets including student grades (Mathematics and Portuguese language), demographic, social and school related features. More information about the data: https://archive.ics.uci.edu/ml/datasets/Student+Performance  
+In the combined datatable "alc" there is 35 variables (listed below). The variable "alc_use" is a simply calculated as the average of work day and weekend alcohol consumption ("walc" and "Dalc", respectively). The variable "high_use" is a binary variable that indicates whether the respondent's alcohol consumption is high or not (TRUE/FALSE). Alcohol consumption is considered high ("high_use" = TRUE) if "alc_use" is greater than 2. The purpose of this analysis is to study the relationships between high/low alcohol consumption and academic achievement.
+
+```{r}
+
+alc <- read.table("data/alc.csv", sep=",", header=TRUE)
+
+colnames(alc)
+
+
+```
+Let's examine the relationship between high/low alcohol use and gender, number of school absences, number of past class failures, and final grade. My personal hypothesis is that high alcohol use is more common with male students, and that the final grades are lower and the number of past class failures and school absences is greater with those student using more alcohol. Let's draw up a few graphs to support the hypothesis.
+
+```{r}
+library(ggplot2)
+
+# initialize a plot of alcohol use
+g1 <- ggplot(data = alc, aes(x = alc_use, fill=sex))
+
+# define the plot as a bar plot and draw it
+g1 + geom_bar()
+
+# initialize a plot of high_use and G3
+g2 <- ggplot(alc, aes(x = high_use, y = G3, col = sex))
+
+# define the plot as a boxplot and draw it
+g2 + geom_boxplot() + ylab("grade")
+
+# initialize a plot of high_use and absences
+g3 <- ggplot(alc, aes(x = high_use, y = absences, col = sex))
+
+# define the plot as a box plot and draw it
+g3 + geom_boxplot() + ylab("absences")
+
+# initialize a plot of high_use and failures
+g4 <- ggplot(data = alc, aes(x = failures, fill=high_use))
+
+# define the plot as a bar plot and draw it
+g4 + geom_bar()
+
+```
+The first bar graph shows that the higher the alcohol consumption (ranging from 1 to 5) the higher the proportion of students are male. In the second and third plots we see that especially with male students the average grade is lower and the number of absences is higher in the high alcohol use group. For female students the results seems to be similar, but not as clear. The fourth graph describes the past failures in high/low alcohol consumption groups. The higher the number of past failures, the higher the proportion of students in high alcohol consumption group.  
+Summary statistics can also be viewed in numerical format. Let's prepare a table, from which we can see the average grade, the number of absences and the past failures in the high and low alcohol consumption groups by gender.
+
+
+```{r}
+
+# access the tidyverse libraries dplyr and ggplot2
+library(dplyr); library(ggplot2)
+
+# produce summary statistics by group
+alc %>% group_by(sex, high_use) %>% summarise(count = n(), mean_grade=mean(G3), mean_absences=mean(absences), mean_failures=mean(failures))
+
+```
+
+The table verifies that the average number of absences and average number of past failures is greater in high alcohol consumption groups for both genders. However, the mean grade in female high alcohol consumption group is actually slightly higher than in female low alcohol consumption group. With male students the original hypothesis is valid, tough: high alcohol consumption group has clearly lower mean grade than low alcohol consumption group.  
+
+
+
+
