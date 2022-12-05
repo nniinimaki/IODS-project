@@ -11,21 +11,41 @@ human <- read_csv("Z:/iods/IODS-project/data/human.csv")
 str(human)
 #Dimension of the dataframe
 dim(human)
-#names of the variables
-names(human)
+
+#The original data is from: http://hdr.undp.org/en/content/human-development-index-hdi
+#variables are:
+#"HDI Rank" = Human Development Index Rank
+#"Country" = Country name
+#"HDI" = Human Development Index
+#"GNI" = Gross National Income per capita
+#"GNI_minus_HDI" = GNI per capita rank minus HDI rank
+#"GII" = Gender Inequality Index
+#"GII Rank = Gender Inequality Index Rank
+#"Life.Exp" = Life expectancy at birth
+#"Edu.Exp" = Expected years of schooling
+#"Edu.Mean" = Mean years of schooling
+#"Mat.Mor" = Maternal mortality ratio
+#"Ado.Birth" = Adolescent birth rate
+#"Parli.F" = Percetange of female representatives in parliament
+#"Edu2.F" = Proportion of females with at least secondary education
+#"Edu2.M" = Proportion of males with at least secondary education
+#"Labo.F" = Proportion of females in the labour force
+#"Labo.M" " Proportion of males in the labour force
+
+#in addition to these, the data contains two variables derived from the original variables
+#"Edu2.FM" = Edu2.F / Edu2.M
+#"Labo.FM" = Labo2.F / Labo2.M
+
 
 #Mutate the data: transform the Gross National Income (GNI) variable to numeric (using string manipulation).
 library(stringr)
 
-# look at the structure of the GNI column in 'human'
-str(human$GNI)
-
 # remove the commas from GNI and print out a numeric version of it
 human$GNI <- str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric()
 
-#Exclude unneeded variables: keep only the columns matching the following variable names (described in the meta file above):  "Country", "Edu2.FM", "Labo.FM", "Edu.Exp", "Life.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F" (1 point)
-
+#Exclude unneeded variables: keep only the columns matching the following variable names:  "Country", "Edu2.FM", "Labo.FM", "Edu.Exp", "Life.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F" (1 point)
 library(dplyr)
+
 # columns to keep
 keep <- c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F")
 
@@ -41,30 +61,30 @@ complete.cases(human)
 data.frame(human[-1], comp = complete.cases(human))
 
 # filter out all rows with NA values
-human_ <- filter(human,complete.cases(human)) 
+human <- filter(human,complete.cases(human)) 
 
-dim(human_)
+dim(human)
 
+#Remove the observations which relate to regions instead of countries. (1 point)
 
-#Remove the observations which relate to regions instead of countries. (1 point)# look at the last 10 observations of human
-tail(human_, n=10)
+#look at the last 10 observations of human
+tail(human, n=10)
 
 # define the last indice we want to keep
 last <- nrow(human_) - 7
 
 # choose everything until the last 7 observations
-human_ <- human_[1:last, ]
+human <- human[1:last, ]
 
 #Define the row names of the data by the country names.
-rownames(human_) <- human_$Country
+rownames(human) <- human$Country
 
 #remove the Country variable
-human_ <- select(human, -Country)
+human <- select(human, -Country)
 
 #The data should now have 155 observations and 8 variables.
-dim(human_)
+dim(human)
 
 #Save the human data in your data folder including the row names. You can overwrite your old ‘human’ data. (1 point)
-
 library(readr)
-write_csv(human_, "Z:/iods/IODS-project/data/human2.csv")
+write_csv(human, "Z:/iods/IODS-project/data/human2.csv")
