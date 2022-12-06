@@ -1,0 +1,164 @@
+# Dimensionality reduction techniques
+
+```{r}
+date()
+```
+Data in this assignment is human development data derived from UNDP. More information about the original datasets can be found [here](https://hdr.undp.org/data-center/human-development-index#/indicies/HDI)
+This data frame includes 155 observations of 8 variables.
+
+```{r}
+
+# read the human data
+human <- read.table("data/human2.csv", sep=",", header=TRUE)
+
+# look at the dimensions of human
+dim(human)
+
+# look at the (column) names of human
+names(human)
+
+# look at the structure of human
+str(human)
+
+# print out summaries of the variables
+summary(human)
+
+```
+Let's look at the variables more closely. In this pairwise graphical overview we can see the distributions of all the variables and their correlations. Most of the variables are not distributed normally. Luckily that is not compulsory in principal component analysis (Metsämuuronen, 2005, 602). Correlations are also visualized in the correlation matrix, where the blue color refers to positive and red to negative correlation. The bigger and darker the dot the stronger the correlation. For example female to male ratio of people with at least secondary education has a high positive correlation with life expectancy at birth, meaning that the higher the proportion of women with at least a secondary education, the longer the life expectancy.
+```{r}
+
+# Access GGally
+library(GGally)
+
+# visualize the 'human' variables
+ggpairs(human)
+
+# Access corrplot
+library(corrplot)
+
+# compute the correlation matrix and visualize it with corrplot
+cor(human) %>% corrplot()
+
+
+```
+## Principal components analysis
+Let's then suppress the data into fewer principal components.
+```{r}
+
+# perform principal component analysis (with the SVD method)
+pca_human <- prcomp(human)
+
+# draw a biplot of the principal component representation and the original variables
+biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+
+```
+  
+From the variable summary we did in the beginning of this chapter we can see that the variables have very different scales. Some variables range approximately between zero and one, while others (GNI) can reach tens of thousands. The different scales makes the PCA plot hard to interpret as the larger variables dominates the analysis. It is sensible to standardize the variables firs and then run the PCA again.
+```{r}
+
+# standardize the variables
+human_std <- scale(human)
+
+# print out summaries of the standardized variables
+summary(human_std)
+
+# perform principal component analysis (with the SVD method)
+pca_human <- prcomp(human_std)
+
+# draw a biplot of the principal component representation and the original variables
+biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+
+```
+  
+The graph has two principal components: PC1 in the x-axis and PC2 in the y-axis. The variables seem to fall clearly into these two principal components. Variables "Labo.FM" (female to male ratio of labour force) and "Parli.F" (Percetange of female representatives in parliament) have higher values in the y-axis but close to zero in the x-axis, so these two variables forms the PC2. Variables "Mat.Mor" (Maternal mortality ratio) and "Ado.Birth" (Adolescent birth rate) have high values in the x-axis and close to zero in the y-axis, and the rest of the variables ("Edu2.FM", "Life.Exp", "Edu.Exp", and "GNI") have low values on the x-axis and close to zero on the y-axis. These six variables constitute PC1. 
+Let's then count the percentages of variance captured by each principal component and plot the pca-graph again with these percentages.
+```{r}
+
+# create and print out a summary of pca_human
+s <- summary(pca_human)
+s
+
+# rounded percentanges of variance captured by each PC
+pca_pr <- round(100*s$importance[2, ], digits = 1)
+
+# print out the percentages of variance
+pca_pr
+
+# create object pc_lab to be used as axis labels
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+pc_lab
+
+# draw a biplot
+biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+
+```
+So the PC1 explains over half (53,6 %) and PC2 about one sixth (16,2 %) of the variance. Together the two largest Pc:s explain about 70 % of the variance. PC3 explains only little under 10 % of the variance and the percentage drops rapidly to PC8. This also shows that a two principal component solution is the most reasonable one.
+
+## Multiple Correspondence Analysis (MCA)
+MCA is a data analysis technique for nominal categorical data, used to detect and represent underlying structures in a data set. It does this by representing data as points in a low-dimensional Euclidean space. The procedure thus appears to be the counterpart of principal component analysis for categorical data.  
+Next we run MCA on the tea dataset that comes from the FactoMineR package. It is measured with a questionnaire on tea: 300 individuals were asked how they drink tea (18 questions) and what are their product's perception (12 questions). In addition, some personal details were asked (4 questions). 
+The questions were about how they consume tea, how they think of tea and descriptive questions (sex, age, socio-professional category and sport practise). Except for the age, all the variables are categorical. For the age, the data set has two different variables: a continuous and a categorical one.
+
+```{r}
+
+#Load the tea dataset and convert its character variables to factors:
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+tea <- read.csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open-Data-Science/master/datasets/tea.csv", stringsAsFactors = TRUE)
+
+#Explore the data briefly
+str(tea)
+dim(tea)
+View(tea)
+```
+
+I'm going to look closer at six variables: Tea (black, green or Earl Grey), How (alone, with milk, with lemon, or other), how (tea bag, unpackaged, or both), sugar (sugar ot no sugar), where (chain store, tea shop, or both), and lunch (lunch or not lunch).
+```{r}
+
+library(dplyr)
+library(tidyr)
+# column names to keep in the dataset
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+
+# select the 'keep_columns' to create a new dataset
+tea_time <- select(tea, keep_columns)
+
+# look at the summaries and structure of the data
+summary(tea_time)
+str(tea_time)
+
+# visualize the dataset
+library(ggplot2)
+pivot_longer(tea_time, cols = everything()) %>% 
+  ggplot(aes(value)) + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8)) + facet_wrap("name", scales = "free")
+
+
+```
+  
+Most tea drinkers seem to be preferring teabags, drinking their tea without milk or lemon or other relish, do not drink their tea at lunch time, prefers Earl Grey tea, and buys their tea from chain store. A little over half of them are not using sugar but almost as many are.  
+Let's then try to do multiple correspondence analysis to these six variables.
+```{r}
+
+# multiple correspondence analysis
+library(FactoMineR)
+mca <- MCA(tea_time, graph = FALSE)
+
+# summary of the model
+summary(mca)
+
+# visualize MCA
+plot(mca, invisible=c("ind"), graph.type = "classic", habillage = "quali")
+
+```
+I have to admit that I didn't have enough time to familiarize myself with MCA so my interpretation of the results are going to be a bit thin. 
+Let's try to plot the Eigenvalues.
+```{r}
+barplot(mca$eig[,2],main="Eigenvalues", names.arg=1:nrow(mca$eig))
+```
+There seems to be two bigger dimensions. The first dimension opposes "tea shop" and "unpackaged" to "chain store" and "tea bag" so i guess it opposes tea enthusiastics from regular tea drinkers. Second dimension opposes "green tea" and "alone" from "black", "Earl Grey","milk", "lemon", and "other" so it opposes green tea drinkers from others and those who like to drink their tea with milk, lemon, or other relishes to those who like to drink their tea just as tea.
+
+References:
+Metsämuuronen, J. (2005) Tutkimuksen tekemisen perusteet ihmistieteissä. Helsinki: International Methelp ky.
+
