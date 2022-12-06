@@ -41,6 +41,7 @@ cor(human) %>% corrplot()
 
 
 ```
+  
 ## Principal components analysis
 Let's then suppress the data into fewer principal components.
 ```{r}
@@ -92,7 +93,8 @@ pc_lab
 biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
 
 ```
-So the PC1 explains over half (53,6 %) and PC2 about one sixth (16,2 %) of the variance. Together the two largest Pc:s explain about 70 % of the variance. PC3 explains only little under 10 % of the variance and the percentage drops rapidly to PC8. This also shows that a two principal component solution is the most reasonable one.
+  
+So the PC1 explains over half (53,6 %) and PC2 about one sixth (16,2 %) of the variance. Together the two largest Pc:s explain about 70 % of the variance. PC3 explains only little under 10 % of the variance and the percentage drops rapidly to PC8. This also shows that a two principal component solution is the most reasonable one.  
 
 ## Multiple Correspondence Analysis (MCA)
 MCA is a data analysis technique for nominal categorical data, used to detect and represent underlying structures in a data set. It does this by representing data as points in a low-dimensional Euclidean space. The procedure thus appears to be the counterpart of principal component analysis for categorical data.  
@@ -111,19 +113,18 @@ tea <- read.csv("https://raw.githubusercontent.com/KimmoVehkalahti/Helsinki-Open
 #Explore the data briefly
 str(tea)
 dim(tea)
-View(tea)
+
 ```
 
 I'm going to look closer at six variables: Tea (black, green or Earl Grey), How (alone, with milk, with lemon, or other), how (tea bag, unpackaged, or both), sugar (sugar ot no sugar), where (chain store, tea shop, or both), and lunch (lunch or not lunch).
 ```{r}
-
 library(dplyr)
 library(tidyr)
 # column names to keep in the dataset
 keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
 
 # select the 'keep_columns' to create a new dataset
-tea_time <- select(tea, keep_columns)
+tea_time <- dplyr::select(tea, keep_columns)
 
 # look at the summaries and structure of the data
 summary(tea_time)
@@ -152,11 +153,13 @@ summary(mca)
 plot(mca, invisible=c("ind"), graph.type = "classic", habillage = "quali")
 
 ```
+  
 I have to admit that I didn't have enough time to familiarize myself with MCA so my interpretation of the results are going to be a bit thin. 
 Let's try to plot the Eigenvalues.
 ```{r}
 barplot(mca$eig[,2],main="Eigenvalues", names.arg=1:nrow(mca$eig))
 ```
+  
 There seems to be two bigger dimensions. The first dimension opposes "tea shop" and "unpackaged" to "chain store" and "tea bag" so i guess it opposes tea enthusiastics from regular tea drinkers. Second dimension opposes "green tea" and "alone" from "black", "Earl Grey","milk", "lemon", and "other" so it opposes green tea drinkers from others and those who like to drink their tea with milk, lemon, or other relishes to those who like to drink their tea just as tea.
 
 References:
