@@ -48,5 +48,4 @@ output:
 ```
 
 ***
-That's all folks!  
 Thanks for the course and happy holidays!

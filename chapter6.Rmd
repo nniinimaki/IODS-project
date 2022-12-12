@@ -50,7 +50,7 @@ Now the variables are in correct form. As mentioned before in BPRSL the variable
 The RATSL dataset has 176 observations of five variables. Variables "ID" and "Group" refers to the individual rats (1-16) and three dietary groups as mentioned before. The variable "Weight" to the weight measurements (in grams), and "Time" to the number of the day when the measurement was made (1-64). The variable "WD" is a character variable equivalent to "Time" and similarly as in BPRSL not needed in this analysis.  
 
 ## Graphical Displays of Longitudinal Data  
-Let's start by viewing the RATSL data in graphical form. Graphical displays of data are usually useful for exposing patterns in the data, particularly when these are unexpected; this might be of great help in suggesting which class of models might be most sensibly applied in the later more formal analysis.  
+Let's start by viewing the RATSL data in graphical form. Graphical displays of data are usually useful for exposing patterns in the data, particularly when these are unexpected; this might be of great help in suggesting which class of models might be most sensibly applied in the later more formal analysis. (Vehkalahti & Everitt, 2019, 157.)  
 
 ### Individuals on graph  
 To begin let's plot the weights for all 16 rats, differentiating between the three dietary groups.
@@ -68,9 +68,9 @@ ggplot(RATSL, aes(x = Time, y = Weight, linetype = ID)) +
 
 ```
   
-From the graphs we can easily see a number of things. Firstly, all rats are gaining weight during the study period, altough, there are few rats in 3 that loses some weight in the first week and one in group 1 that hardly gaines weight at all during the study. The rats in group 1 are clearly all smaller than in groups 2 and 3 and their growth rate seems to be slower. The rats in group 2 seems to grow the most, although there is one individual in group two that has a slower growth rate than others in the group. The individual differences and variability appears to stay approximately the same with time.  
+From the graphs we can easily see a number of things. Firstly, all rats are gaining weight during the study period, although, there are few rats in 3 that loses some weight in the first week and one in group 1 that hardly gains weight at all during the study. The rats in group 1 are clearly all smaller than in groups 2 and 3 and their growth rate seems to be slower. The rats in group 2 seems to grow the most, although there is one individual in group two that has a slower growth rate than others in the group. The individual differences and variability appears to stay approximately the same with time.  
 As we noticed from the above graphs, the rats that are bigger at the beginning tend to stay bigger throughout the study. This phenomenon is generally referred to as tracking. The tracking phenomenon can be seen more clearly in a plot of the standardized values of each
-observation, i.e., the values obtained by subtracting the relevant occasion mean from the original observation and then dividing by the corresponding visit standard deviation. Next we standardise the variable "Weight" with "Time" as grouping variable, glimpse the data with standadised weight, and plot it.
+observation, i.e., the values obtained by subtracting the relevant occasion mean from the original observation and then dividing by the corresponding visit standard deviation. (Vehkalahti & Everitt, 2019, 157-158.) Next we standardise the variable "Weight" with "Time" as grouping variable, glimpse the data with standadised weight, and plot it.
 ```{r}
 library(dplyr)
 library(tidyr)
@@ -242,7 +242,7 @@ summary(BPRS_reg)
 According to the summary of the linear regression model time (week) is significant at the level of 0,001 but the treatment group is not, meaning that time explains the bprs values significantly but there is no significant difference between the two treatments.  
 
 ## The Random Intercept Model  
-The linear regression model assumes independence of the repeated measures of bprs, which is highly unlikely. Let's now fit the *random intercept model* for the same two explanatory variables: week and treatment. Fitting a random intercept model allows the linear regression fit for each subject to differ in *intercept* from other subjects.
+The linear regression model assumes independence of the repeated measures of bprs, which is highly unlikely. Let's now fit the *random intercept model* for the same two explanatory variables: week and treatment. Fitting a random intercept model allows the linear regression fit for each subject to differ in *intercept* from other subjects (Vehkalahti & Everitt, 2019, 177.).
 ```{r}
 # access library lme4
 library(lme4)
@@ -257,7 +257,7 @@ summary (BPRS_ref)
 The results of the random intercept model is similar to linear regression model. The regression coefficient for week is significant, but again the treatment group is not significant.  
 
 ### Random intercept and random slope model  
-Now let's fit the random intercept and random slope model to the bprs data. Fitting a random intercept and random slope model allows the linear regression fits for each individual to differ in intercept but also in slope. This way it is possible to account for the individual differences in the bprs profiles, but also the effect of time.
+Now let's fit the random intercept and random slope model to the bprs data. Fitting a random intercept and random slope model allows the linear regression fits for each individual to differ in intercept but also in slope. This way it is possible to account for the individual differences in the bprs profiles, but also the effect of time. (Vehkalahti & Everitt, 2019, 179.)
 ```{r}
 # create a random intercept and random slope model
 library(lme4)
